@@ -4,9 +4,12 @@ import { Input } from './ui/input'
 import { Button } from './ui/button'
 import { toast } from 'sonner'
 import { signIn } from '@/lib/auth-client'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 const LoginForm = () => {
-
+    const router = useRouter()
+    const [isPending,setIsPending] = useState(false)
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>)=>{
         e.preventDefault()
         const formData = new FormData(e.currentTarget)
@@ -21,13 +24,18 @@ const LoginForm = () => {
                 email,
                 password
             },{
-                onRequest:()=>{},
-                onResponse:()=>{},
+                onRequest:()=>{
+                    setIsPending(true)
+                },
+                onResponse:()=>{
+                    setIsPending(false)
+                },
                 onError:(ctx)=>{
                     toast.error(ctx.error.message)
                 },
                 onSuccess:()=>{
-                    toast.message("Logged in.")
+                    router.push("/profile")
+                    toast.success("Logged in.")
                 }
             })
         } catch (error) {
@@ -44,7 +52,7 @@ const LoginForm = () => {
             <Label htmlFor='password'>Password</Label>
             <Input name='password' id='password' type='password' placeholder='Password' />
         </div>  
-        <Button className='w-full' type='submit'>Login</Button>
+        <Button disabled={isPending} className='w-full' type='submit'>Login</Button>
     </form>
   )
 }

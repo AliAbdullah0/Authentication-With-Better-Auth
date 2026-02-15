@@ -1,3 +1,4 @@
+import ReturnButton from "@/components/ReturnButton";
 import SignoutButton from "@/components/SignoutButton";
 import { auth } from "@/lib/auth"
 import { headers } from "next/headers";
@@ -6,10 +7,11 @@ const Profile = async () => {
     const session = await auth.api.getSession({
         headers:await headers()
     });
-    if(!session) <p className="text-destructive text-center px-8 py-6">Unauthorized</p>
+    if(!session) return <p className="text-destructive text-center px-8 py-6">Unauthorized</p>
   return (
     <div className='px-8 py-16 container mx-auto max-w-lg space-y-8'>
         <div className='space-y-8'>
+        <ReturnButton href='/' label='Home'/>
             <h1 className='font-bold text-lg'>
                 Profile
             </h1>
